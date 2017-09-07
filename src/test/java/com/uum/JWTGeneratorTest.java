@@ -54,9 +54,7 @@ public class JWTGeneratorTest {
     }
     @Test(expected = TokenExpiredException.class)
     public void verifyToken_validButExpiredToken(){
-        String token = jwtGenerator.decodeToken(testTokenWithTimeStamp);
-        //jwtGenerator.decodeToken("itzelBritzel.trallala.blafaselblubb");
-        System.out.println("JWTGeneratorTest.decodeToken: token:\n");// + token);
+        jwtGenerator.decodeToken(testTokenWithTimeStamp);
     }
 
     @Test
@@ -66,6 +64,6 @@ public class JWTGeneratorTest {
 
         String decoded = jwtGenerator.decodeToken(jwtToken);
         System.out.println("JWTGeneratorTest.encodeDecode: decoded: " + decoded);
-
+        assertThat(testData).isEqualTo(decoded);
     }
 }
