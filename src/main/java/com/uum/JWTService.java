@@ -11,7 +11,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
 
-public class JWTGenerator {
+public class JWTService {
 
         public static final String SECRET = "secret";
         public static final String AUTH_0 = "auth0";
