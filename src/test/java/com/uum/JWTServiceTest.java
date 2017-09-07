@@ -10,6 +10,8 @@ import org.junit.Test;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 
+import java.io.UnsupportedEncodingException;
+
 public class JWTServiceTest {
     JWTService jwtService;
     String testTokenWithTimeStamp =
@@ -26,9 +28,9 @@ public class JWTServiceTest {
     }
 
     @Test
-    public void createToken() {
+    public void createToken() throws UnsupportedEncodingException {
         String testData = "Ich bin ein lesbarere String";
-        String token = jwtService.generate(testData);
+        String token = jwtService.generateJwt(testData);
         assertThat(token).isNotEmpty();
         int count = StringUtils.countMatches(token, '.');
         assertThat(count).isEqualTo(2);
@@ -36,43 +38,43 @@ public class JWTServiceTest {
 
     @Test(expected = JWTDecodeException.class)
     public void verifyToken_justOnePart() {
-        jwtService.decodeToken("itzelBritzel");
-        System.out.println("JWTServiceTest.decodeToken: token:\n");// + token);
+        jwtService.decodeJwt("itzelBritzel");
+        System.out.println("JWTServiceTest.decodeJwt: token:\n");// + token);
 
     }
 
     @Test(expected = JWTDecodeException.class)
     public void verifyToken_twoParts() {
-        jwtService.decodeToken("itzelBritzel.trallala");
-        System.out.println("JWTServiceTest.decodeToken: token:\n");// + token);
+        jwtService.decodeJwt("itzelBritzel.trallala");
+        System.out.println("JWTServiceTest.decodeJwt: token:\n");// + token);
     }
 
     @Test(expected = JWTDecodeException.class)
     public void verifyToken_tooManyParts() {
-        jwtService.decodeToken("itzelBritzel.trallala..bla.fasel.blubb");
-        System.out.println("JWTServiceTest.decodeToken: token:\n");// + token);
+        jwtService.decodeJwt("itzelBritzel.trallala..bla.fasel.blubb");
+        System.out.println("JWTServiceTest.decodeJwt: token:\n");// + token);
     }
 
     @Test(expected = TokenExpiredException.class)
     public void verifyToken_validButExpiredToken() {
-        jwtService.decodeToken(testTokenWithTimeStamp);
+        jwtService.decodeJwt(testTokenWithTimeStamp);
     }
 
     @Test
-    public void encodeDecode() {
+    public void encodeDecode() throws UnsupportedEncodingException {
         String testData = "Ich bin ein lesbarere String";
-        String jwtToken = jwtService.generate(testData);
+        String jwtToken = jwtService.generateJwt(testData);
 
-        String decoded = jwtService.decodeToken(jwtToken);
+        String decoded = jwtService.decodeJwt(jwtToken);
         assertThat(testData).isEqualTo(decoded);
     }
 
     @Test
-    public void encodeDecodeUserId() {
+    public void encodeDecodeUserId() throws UnsupportedEncodingException {
         String sourceUserId = "xne1399";
-        String jwtToken = jwtService.generate(sourceUserId);
+        String jwtToken = jwtService.generateJwt(sourceUserId);
 
-        String decodedUserId = jwtService.decodeToken(jwtToken);
+        String decodedUserId = jwtService.decodeJwt(jwtToken);
         assertThat(sourceUserId).isEqualTo(decodedUserId);
         System.out.println("JWTServiceTest.encodeDecodeUserId: encoded '"+sourceUserId+"' is same as decoded '"+decodedUserId+"'");
     }
